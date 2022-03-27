@@ -10,7 +10,7 @@ internal class BookStuffKtTest {
     @Test
     fun test_getBookFromString_Basics() {
         val expected = BookInfo(
-            name = "Норма",
+            title = "Норма",
             authors = listOf("Владимир Сорокин"),
             year = 1979,
             id = 1
@@ -34,7 +34,7 @@ internal class BookStuffKtTest {
 
         assertEquals(                                                                                               //>1 author
             BookInfo(
-                name = "Метода по матану",
+                title = "Метода по матану",
                 authors = listOf("Колпаков А. С.", "Железняк А. В.", "Поздняков С. Н."),
                 year = 2011,
                 id = 1
@@ -45,7 +45,7 @@ internal class BookStuffKtTest {
 
         assertEquals(                                                                                               // no authors
             BookInfo(
-                name = "Сборник убогих народных анекдотов",
+                title = "Сборник убогих народных анекдотов",
                 authors = listOf(),
                 year = 2019,
                 id = 1
@@ -78,7 +78,7 @@ internal class BookStuffKtTest {
         assertThrows(
             IllegalArgumentException::class.java
         ) {
-            getBookFromString("1. ${Config.separator} Владимир Сорокин ${Config.separator} 1979")            // missing name
+            getBookFromString("1. ${Config.separator} Владимир Сорокин ${Config.separator} 1979")            // missing title
         }
 
 
@@ -98,19 +98,19 @@ internal class BookStuffKtTest {
     @Test
     fun test_getBookListFromString() {
         val expected1 = BookInfo(
-            name = "Норма",
+            title = "Норма",
             authors = listOf("Владимир Сорокин"),
             year = 1979,
             id = 1
         )
         val expected2 = BookInfo(
-            name = "Сборник убогих народных анекдотов",
+            title = "Сборник убогих народных анекдотов",
             authors = listOf(),
             year = 2019,
             id = 2
         )
         val expected3 = BookInfo(
-            name = "Метода по матану",
+            title = "Метода по матану",
             authors = listOf("Колпаков А. С.", "Железняк А. В.", "Поздняков С. Н."),
             year = 2011,
             id = 3

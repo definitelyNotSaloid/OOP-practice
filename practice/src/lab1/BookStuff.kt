@@ -11,28 +11,19 @@ object Config {
 }
 
 data class BookInfo(
-    val name: String,
+    val title: String,
     val authors: List<String>,
     val year: Int,
     val id: Int
 )
 
-private fun withoutSideWhitespaces(string: String): String {
-    val left = string.indexOfFirst { ch -> !ch.isWhitespace() }
-    if (left == -1)                               // if string is blank
-        return ""
-
-    val right = string.indexOfLast { ch -> !ch.isWhitespace() }
-    return string.substring(left, right + 1)
-}
-
-// format : $ID. $NAME // [AUTHOR1], [AUTHOR2],... // $YEAR
+// format : $ID. $TITLE // [AUTHOR1], [AUTHOR2],... // $YEAR
 @Throws(IllegalArgumentException::class)
 fun getBookFromString(string: String): BookInfo {
-    val blocks = withoutSideWhitespaces(string).split(Config.separator)
+    val blocks = string.trim().split(Config.separator)
 
     require(blocks.size == 3)           // magic const for sure, but making editable template for book info str is a bit of overkill
-    { "bad formatting" }                    // naming it also seems pointless, it is not used anywhere else
+    { "bad formatting" }                      // naming it also seems pointless, it is not used anywhere else
 
 
     val idAndName = blocks[0]
@@ -42,19 +33,22 @@ fun getBookFromString(string: String): BookInfo {
             idString.dropLast(1) else idString)
             .toIntOrNull() ?: throw IllegalArgumentException("Non-valid book id: $idString")
 
-    val name = withoutSideWhitespaces(idAndName.substringAfter(' ', ""))
-    require(name.isNotBlank()) { "missing book name" }
+    val title = idAndName.substringAfter(' ', "").trim()
+    require(title.isNotBlank()) { "missing book title" }
 
     val authors = ArrayList<String>()
     blocks[1].splitToSequence(',')
-        .filter { str -> str.isNotBlank() }                         //avoiding adding empty strings
-        .forEach { str -> authors.add(withoutSideWhitespaces(str)) }
+        .forEach { str ->
+            val strTrimmed = str.trim()                         // we don't want to add blank strings
+            if (strTrimmed.isNotEmpty())
+                authors.add(strTrimmed)
+        }
 
-    val year = withoutSideWhitespaces(blocks[2])
-        .toIntOrNull() ?: throw IllegalArgumentException("invalid year : ${withoutSideWhitespaces(blocks[2])}")
+    val year = blocks[2].trim()
+        .toIntOrNull() ?: throw IllegalArgumentException("invalid year : ${blocks[2].trim()}")
 
     return BookInfo(
-        name = name,
+        title = title,
         authors = authors,
         year = year,
         id = id
@@ -63,9 +57,9 @@ fun getBookFromString(string: String): BookInfo {
 
 
 fun getBookListFromString(string: String): List<BookInfo> {
-    val list = ArrayList<BookInfo>()
+    val list = mutableListOf<BookInfo>()
     for (line in string.splitToSequence('\n'))
-        if (line.isNotBlank())                                          // exception on empty line is a bit of overkill
+        if (line.isNotBlank())
             list.add(getBookFromString(line))
 
     return list

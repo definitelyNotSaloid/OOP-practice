@@ -21,10 +21,10 @@ fun main(){
 
     for (book in bookList)
     {
-        if (book.name.length>longestNameBook.name.length)
+        if (book.title.length>longestNameBook.title.length)
             longestNameBook=book
 
-        if (book.name.length<shortestNameBook.name.length)
+        if (book.title.length<shortestNameBook.title.length)
             shortestNameBook=book
 
         if (book.year>newestBook.year)
@@ -34,8 +34,8 @@ fun main(){
             oldestBook = book
     }
 
-    println("Новейшая книга: ${newestBook.name}")
-    println("Старейшая книга: ${oldestBook.name}")
-    println("Самое короткое название: ${shortestNameBook.name}")
-    println("Самое длинное название: ${longestNameBook.name}")
+    println("Новейшая книга: ${newestBook.title}")
+    println("Старейшая книга: ${oldestBook.title}")
+    println("Самое короткое название: ${shortestNameBook.title}")
+    println("Самое длинное название: ${longestNameBook.title}")
 }
