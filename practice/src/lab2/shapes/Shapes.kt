@@ -5,11 +5,11 @@ import kotlin.math.sqrt
 // made implementations data classes here. too lazy to override equals and hashCode myself
 
 
-sealed interface IShape2d {
+interface IShape2d {
     val area: Double
 }
 
-sealed interface IDrawableShape2d : IShape2d {
+interface IDrawableShape2d : IShape2d {
     val borderColor: UInt           // RGBA
     val fillColor: UInt             // RGBA
 }
