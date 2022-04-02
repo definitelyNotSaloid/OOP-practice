@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 
 object Logger {
     var outputPath: String = "Logs/log.txt"
-    private var format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+    private val format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
     fun message(text: String) {
         val file = FileWriter(outputPath, true)
