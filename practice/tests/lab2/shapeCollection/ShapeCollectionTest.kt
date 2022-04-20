@@ -8,14 +8,14 @@ import org.junit.jupiter.api.BeforeEach
 
 
 // not much to test here actually. SC is a wrapper for standard list
-internal class ShapeCollectionTest {
+internal class ShapeCollectionBasicsTest {
 
     private val triangle = Triangle(3.0, 4.0, 5.0, 0xFFFFFFFFu, 0x00000000u)
     private val rectangle = Rectangle(10.0, 5.0, 0xFFFF0000u, 0x00000000u)
     private val circle = Circle(10.0, 0xFFFFFFFFu, 0x0000FFFFu)
     private val square = Square(10.0, 0xFFFF0000u, 0x0000FFFFu)
 
-    private var testSubject : IShapeCollection = ShapeCollection()
+    private var testSubject: IShapeCollection = ShapeCollection()
 
     @BeforeEach
     fun initSubj() {
@@ -30,13 +30,13 @@ internal class ShapeCollectionTest {
     @Test
     fun allMatching() {
         val request1 = testSubject.allMatching { it is IRectangle }
-        assertTrue{
-            request1.all{ it is IRectangle } && request1.size == 2
+        assertTrue {
+            request1.all { it is IRectangle } && request1.size == 2
         }
 
-        val request2 = testSubject.allMatching { it is IDrawableShape2d && it.borderColor==0x0000FFFFu }
-        assertTrue{
-            request2.all { it is IDrawableShape2d && it.borderColor==0x0000FFFFu } && request2.size == 2
+        val request2 = testSubject.allMatching { it is IDrawableShape2d && it.borderColor == 0x0000FFFFu }
+        assertTrue {
+            request2.all { it is IDrawableShape2d && it.borderColor == 0x0000FFFFu } && request2.size == 2
         }
     }
 
@@ -44,8 +44,8 @@ internal class ShapeCollectionTest {
     fun groupByBorderColor() {
         val res = testSubject.groupByBorderColor()
 
-        assertTrue(res.all{  pair ->
-            pair.value.all{it.borderColor==pair.key}
+        assertTrue(res.all { pair ->
+            pair.value.all { it.borderColor == pair.key }
         })
     }
 
@@ -53,8 +53,8 @@ internal class ShapeCollectionTest {
     fun groupByFillColor() {
         val res = testSubject.groupByFillColor()
 
-        assertTrue(res.all{  pair ->
-            pair.value.all{it.fillColor==pair.key}
+        assertTrue(res.all { pair ->
+            pair.value.all { it.fillColor == pair.key }
         })
     }
 
@@ -73,4 +73,6 @@ internal class ShapeCollectionTest {
         assertEquals(470.0, testSubject.totalArea(), 2.0)
     }
 }
+
+// btw it doesnt throw any exceptions. less work for me i guess
 

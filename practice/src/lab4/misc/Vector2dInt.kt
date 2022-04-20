@@ -15,11 +15,10 @@ data class Vector2dInt(var x: Int, var y: Int) {
     }
 
     companion object {
-        // made them internal to avoid confusion. Inverted y is handy for map coordinates, but not anything besides them
-        internal val NORTH = Vector2dInt(0, -1)
-        internal val EAST = Vector2dInt(1, 0)
-        internal val SOUTH = Vector2dInt(0, 1)
-        internal val WEST = Vector2dInt(-1, 0)
+        val NORTH = Vector2dInt(0, -1)
+        val EAST = Vector2dInt(1, 0)
+        val SOUTH = Vector2dInt(0, 1)
+        val WEST = Vector2dInt(-1, 0)
     }
 
     override fun toString(): String {
