@@ -17,8 +17,6 @@ interface IMazeMap {
     val width: Int
     val height: Int
 
-    val masks: MutableList<IWeightedMapMask>
-
     fun addAt(content: CellContent, x: Int, y: Int)
     fun addAt(content: CellContent, pos: Vector2dInt)
 
@@ -41,7 +39,7 @@ interface IMazeMap {
 class MazeMap
     : IMazeMap {
 
-    override val masks: MutableList<IWeightedMapMask> = mutableListOf()
+    // val masks: MutableList<IWeightedMapMask> = mutableListOf()
 
     // list of rows, each row contains.. something. or nothing
     // size can be changed only during initialization
@@ -77,7 +75,7 @@ class MazeMap
 
         var lineLen = -1
         var lineIndex = 0
-        for (line in string.splitToSequence('\n')) {
+        for (line in string.splitToSequence('\n', '\r').filter { it.isNotEmpty() }) {
 
             if (lineLen == -1)
                 lineLen = line.length
@@ -87,12 +85,12 @@ class MazeMap
             map.add(ArrayList(lineLen))
 
             for (char in line) {
-                when (char) {
-                    ' ' -> map[lineIndex].add(mutableListOf())
-                    CellContent.WALL.char -> map[lineIndex].add(mutableListOf(CellContent.WALL))
-                    CellContent.PLAYER.char -> map[lineIndex].add(mutableListOf(CellContent.PLAYER))
-                    CellContent.EXIT.char -> map[lineIndex].add(mutableListOf(CellContent.EXIT))
-                    else -> throw IllegalArgumentException("unknown cell contents")
+                when {
+                    char.isWhitespace() -> map[lineIndex].add(mutableListOf())
+                    char == CellContent.WALL.char -> map[lineIndex].add(mutableListOf(CellContent.WALL))
+                    char == CellContent.PLAYER.char -> map[lineIndex].add(mutableListOf(CellContent.PLAYER))
+                    char == CellContent.EXIT.char -> map[lineIndex].add(mutableListOf(CellContent.EXIT))
+                    else -> throw IllegalArgumentException("unknown cell content: $char")
                 }
             }
 
@@ -158,7 +156,7 @@ class MazeMap
     }
 
     override fun getCellWeight(x: Int, y: Int): Double {
-        return masks.sumOf { it[x, y] }
+        return 1.0 //masks.sumOf { it[x, y] }
     }
 
     override fun toString(): String {
@@ -180,40 +178,40 @@ class MazeMap
     }
 }
 
-interface IWeightedMapMask {
-    operator fun get(x: Int, y: Int): Double
-    operator fun get(pos: Vector2dInt): Double
-
-    operator fun set(x: Int, y: Int, value: Double)
-    operator fun set(pos: Vector2dInt, value: Double)
-}
-
-class DefaultMapMask(map: IMazeMap) : IWeightedMapMask {
-    private val maskMatrix: MutableList<MutableList<Double>>
-
-    init {
-        maskMatrix = ArrayList(map.height)
-        for (i in 0 until map.height) {
-            maskMatrix.add(ArrayList(map.width))
-
-            for (j in 0 until map.width)
-                maskMatrix[i].add(0.0)
-        }
-    }
-
-    override fun get(pos: Vector2dInt): Double {
-        return this[pos.x, pos.y]
-    }
-
-    override fun get(x: Int, y: Int): Double {
-        return maskMatrix[y][x]
-    }
-
-    override fun set(pos: Vector2dInt, value: Double) {
-        this[pos.x, pos.y] = value
-    }
-
-    override fun set(x: Int, y: Int, value: Double) {
-        maskMatrix[y][x] = value
-    }
-}
+//interface IWeightedMapMask {
+//    operator fun get(x: Int, y: Int): Double
+//    operator fun get(pos: Vector2dInt): Double
+//
+//    operator fun set(x: Int, y: Int, value: Double)
+//    operator fun set(pos: Vector2dInt, value: Double)
+//}
+//
+//class DefaultMapMask(map: IMazeMap) : IWeightedMapMask {
+//    private val maskMatrix: MutableList<MutableList<Double>>
+//
+//    init {
+//        maskMatrix = ArrayList(map.height)
+//        for (i in 0 until map.height) {
+//            maskMatrix.add(ArrayList(map.width))
+//
+//            for (j in 0 until map.width)
+//                maskMatrix[i].add(0.0)
+//        }
+//    }
+//
+//    override fun get(pos: Vector2dInt): Double {
+//        return this[pos.x, pos.y]
+//    }
+//
+//    override fun get(x: Int, y: Int): Double {
+//        return maskMatrix[y][x]
+//    }
+//
+//    override fun set(pos: Vector2dInt, value: Double) {
+//        this[pos.x, pos.y] = value
+//    }
+//
+//    override fun set(x: Int, y: Int, value: Double) {
+//        maskMatrix[y][x] = value
+//    }
+//}

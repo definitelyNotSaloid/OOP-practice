@@ -1,19 +1,29 @@
 package lab4.map.controls
 
 import lab4.map.*
+import lab4.misc.IListener
 import lab4.misc.Vector2dInt
 
 
 interface IPlayerController {
     var playerPos : Vector2dInt
     val playerAtExit : Boolean
+
+    fun attachToMap(map : IMazeMap)
+
     fun tryMovePlayer(move : Vector2dInt) : Boolean
 }
 
-class PlayerController(private val map : IMazeMap) : IPlayerController {
+class PlayerController(private var map : IMazeMap) : IPlayerController {
+
+    val notifyOnStateChange = mutableListOf<IListener>()
 
     private var _playerPos = Vector2dInt(0,0)             // primary ctor will change those values
 
+    override fun attachToMap(map: IMazeMap) {
+        this.map = map
+        notifyOnStateChange.forEach { it.notifyListener() }
+    }
 
     override val playerAtExit: Boolean
         get() = map.containsAt(CellContent.EXIT, playerPos)
@@ -66,6 +76,7 @@ class PlayerController(private val map : IMazeMap) : IPlayerController {
         }
 
         playerPos = newPos
+        notifyOnStateChange.forEach { it.notifyListener() }
         return true
     }
 

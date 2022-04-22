@@ -3,9 +3,6 @@ package lab4.misc
 data class Vector2dInt(var x: Int, var y: Int) {
     constructor() : this(0, 0)
 
-    val bothNotNegative: Boolean
-        get() = x >= 0 && y >= 0
-
     operator fun plus(other: Vector2dInt): Vector2dInt {
         return Vector2dInt(x + other.x, y + other.y)
     }
@@ -23,6 +20,10 @@ data class Vector2dInt(var x: Int, var y: Int) {
 
     override fun toString(): String {
         return "($x, $y)"
+    }
+
+    operator fun times(scalar: Int): Vector2dInt {
+        return Vector2dInt(x * scalar, y * scalar)
     }
 }
 
